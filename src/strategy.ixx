@@ -1,6 +1,7 @@
 module;
 
 #include <memory>
+#include <string_view>
 #include <vector>
 
 export module Bigous.Polymorfism.Strategy;
@@ -13,7 +14,8 @@ export
 		{
 			namespace strategy
 			{
-				auto drawed = 0ULL;
+				auto             drawed = 0ULL;
+				std::string_view name{ "Strategy" };
 
 				class Circle;
 				class Square;
@@ -44,11 +46,12 @@ export
 
 				class Circle : public Shape
 				{
-					double                          radius;
+					double                                radius;
 					std::unique_ptr< DrawCircleStrategy > drawing;
 
 				public:
-					explicit Circle( double rad, std::unique_ptr< DrawCircleStrategy > ds ) : radius( rad ), drawing( std::move( ds ) )
+					explicit Circle( double rad, std::unique_ptr< DrawCircleStrategy > ds )
+							: radius( rad ), drawing( std::move( ds ) )
 					{
 					}
 					virtual ~Circle() = default;
@@ -58,11 +61,13 @@ export
 
 				class Square : public Shape
 				{
-					double                          side;
+					double                                side;
 					std::unique_ptr< DrawSquareStrategy > drawing;
 
 				public:
-					explicit Square( double s, std::unique_ptr< DrawSquareStrategy > ds ) : side( s ), drawing( std::move( ds ) ) {}
+					explicit Square( double s, std::unique_ptr< DrawSquareStrategy > ds ) : side( s ), drawing( std::move( ds ) )
+					{
+					}
 					virtual ~Square() = default;
 					double getSide() const noexcept { return side; }
 					void   draw() const override { drawing->draw( *this ); }
@@ -75,26 +80,28 @@ export
 					}
 				}
 
-        class OpenGLCircleStrategy : public DrawCircleStrategy {
-          public:
-          virtual ~OpenGLCircleStrategy() {}
+				class OpenGLCircleStrategy : public DrawCircleStrategy
+				{
+				public:
+					virtual ~OpenGLCircleStrategy() {}
 
-          void draw(Circle const &) const override {++drawed;}
-        };
+					void draw( Circle const & ) const override { ++drawed; }
+				};
 
-        class OpenGLSquareStrategy : public DrawSquareStrategy {
-          public:
-          virtual ~OpenGLSquareStrategy() {}
+				class OpenGLSquareStrategy : public DrawSquareStrategy
+				{
+				public:
+					virtual ~OpenGLSquareStrategy() {}
 
-          void draw(Square const &) const override {++drawed;}
-        };
+					void draw( Square const & ) const override { ++drawed; }
+				};
 
 				auto create_shapes( int size )
 				{
 					Shapes shapes;
 					for( int i = 0; i < size / 2; ++i ) {
-						shapes.push_back( std::make_unique< Circle >( 2.0 + i, std::make_unique<OpenGLCircleStrategy>() ) );
-						shapes.push_back( std::make_unique< Square >( 1.5 + i, std::make_unique<OpenGLSquareStrategy>() ) );
+						shapes.push_back( std::make_unique< Circle >( 2.0 + i, std::make_unique< OpenGLCircleStrategy >() ) );
+						shapes.push_back( std::make_unique< Square >( 1.5 + i, std::make_unique< OpenGLSquareStrategy >() ) );
 					}
 					return shapes;
 				}

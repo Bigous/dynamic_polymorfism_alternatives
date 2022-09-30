@@ -1,6 +1,7 @@
 module;
 
 #include <memory>
+#include <string_view>
 #include <variant>
 #include <vector>
 
@@ -14,7 +15,8 @@ export
 		{
 			namespace type_erased
 			{
-				auto drawed = 0ULL;
+				auto             drawed = 0ULL;
+				std::string_view name{ "Type Erased" };
 
 				class Circle
 				{

@@ -2,6 +2,7 @@ module;
 
 #include <functional>
 #include <memory>
+#include <string_view>
 #include <vector>
 
 export module Bigous.Polymorfism.Function;
@@ -14,7 +15,8 @@ export
 		{
 			namespace function
 			{
-				auto drawed = 0ULL;
+				auto             drawed = 0ULL;
+				std::string_view name{ "Function" };
 
 				class Circle;
 				class Square;
@@ -42,7 +44,7 @@ export
 					DrawCircleStrategy drawing;
 
 				public:
-					explicit Circle( double rad, DrawCircleStrategy ds = Draw{}) : radius( rad ), drawing( std::move( ds ) ) {}
+					explicit Circle( double rad, DrawCircleStrategy ds = Draw{} ) : radius( rad ), drawing( std::move( ds ) ) {}
 					virtual ~Circle() = default;
 					double getRadius() const noexcept { return radius; }
 					void   draw() const override { drawing( *this ); }
@@ -54,7 +56,7 @@ export
 					DrawSquareStrategy drawing;
 
 				public:
-					explicit Square( double s, DrawSquareStrategy ds = Draw{}) : side( s ), drawing( std::move( ds ) ) {}
+					explicit Square( double s, DrawSquareStrategy ds = Draw{} ) : side( s ), drawing( std::move( ds ) ) {}
 					virtual ~Square() = default;
 					double getSide() const noexcept { return side; }
 					void   draw() const override { drawing( *this ); }

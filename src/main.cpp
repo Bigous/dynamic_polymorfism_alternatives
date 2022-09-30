@@ -17,6 +17,12 @@ import Bigous.Polymorfism.TypeErased;
 
 constexpr int container_size = 5'000'000;
 
+void display_duration(const std::string_view &name, const double &create_time, const double &draw_time) {
+	std::cout << name << " creation duration: " << create_time << " seconds." << std::endl;
+	std::cout << name << " draw duration: " << draw_time << " seconds." << std::endl;
+
+}
+
 void procedural()
 {
 	using namespace bigous::polymorfism::procedural;
@@ -26,8 +32,7 @@ void procedural()
 	auto   create_time = measure_in_seconds( [&shapes]() { shapes = create_shapes( container_size ); } );
 	auto   draw_time   = measure_in_seconds( [&shapes]() { draw( shapes ); } );
 
-	std::cout << "Procedural creation duration: " << create_time << " seconds." << std::endl;
-	std::cout << "Procedural draw duration: " << draw_time << " seconds." << std::endl;
+	display_duration(name, create_time, draw_time);
 }
 
 void object_oriented()
@@ -39,8 +44,7 @@ void object_oriented()
 	auto   create_time = measure_in_seconds( [&shapes]() { shapes = create_shapes( container_size ); } );
 	auto   draw_time   = measure_in_seconds( [&shapes]() { draw( shapes ); } );
 
-	std::cout << "Object-Oriented creation duration: " << create_time << " seconds." << std::endl;
-	std::cout << "Object-Oriented draw duration: " << draw_time << " seconds." << std::endl;
+	display_duration(name, create_time, draw_time);
 }
 
 void visitor()
@@ -52,8 +56,7 @@ void visitor()
 	auto   create_time = measure_in_seconds( [&shapes]() { shapes = create_shapes( container_size ); } );
 	auto   draw_time   = measure_in_seconds( [&shapes]() { draw( shapes ); } );
 
-	std::cout << "Visitor creation duration: " << create_time << " seconds." << std::endl;
-	std::cout << "Visitor draw duration: " << draw_time << " seconds." << std::endl;
+	display_duration(name, create_time, draw_time);
 }
 
 void variant_visitor()
@@ -65,8 +68,7 @@ void variant_visitor()
 	auto   create_time = measure_in_seconds( [&shapes]() { shapes = create_shapes( container_size ); } );
 	auto   draw_time   = measure_in_seconds( [&shapes]() { draw( shapes ); } );
 
-	std::cout << "Variant Visitor creation duration: " << create_time << " seconds." << std::endl;
-	std::cout << "Variant Visitor draw duration: " << draw_time << " seconds." << std::endl;
+	display_duration(name, create_time, draw_time);
 }
 
 void strategy()
@@ -78,8 +80,7 @@ void strategy()
 	auto   create_time = measure_in_seconds( [&shapes]() { shapes = create_shapes( container_size ); } );
 	auto   draw_time   = measure_in_seconds( [&shapes]() { draw( shapes ); } );
 
-	std::cout << "Strategy creation duration: " << create_time << " seconds." << std::endl;
-	std::cout << "Strategy draw duration: " << draw_time << " seconds." << std::endl;
+	display_duration(name, create_time, draw_time);
 }
 
 void function()
@@ -91,8 +92,7 @@ void function()
 	auto   create_time = measure_in_seconds( [&shapes]() { shapes = create_shapes( container_size ); } );
 	auto   draw_time   = measure_in_seconds( [&shapes]() { draw( shapes ); } );
 
-	std::cout << "Function creation duration: " << create_time << " seconds." << std::endl;
-	std::cout << "Function draw duration: " << draw_time << " seconds." << std::endl;
+	display_duration(name, create_time, draw_time);
 }
 
 void type_erased()
@@ -104,8 +104,7 @@ void type_erased()
 	auto   create_time = measure_in_seconds( [&shapes]() { shapes = create_shapes( container_size ); } );
 	auto   draw_time   = measure_in_seconds( [&shapes]() { draw( shapes ); } );
 
-	std::cout << "Type Erased creation duration: " << create_time << " seconds." << std::endl;
-	std::cout << "Type Erased draw duration: " << draw_time << " seconds." << std::endl;
+	display_duration(name, create_time, draw_time);
 }
 
 int main( int argc, char *argv[] )
@@ -114,60 +113,57 @@ int main( int argc, char *argv[] )
 
 	// Procedural
 	{
-		assert( bigous::polymorfism::procedural::drawed == 0ULL );
+		using namespace bigous::polymorfism::procedural;
+		assert( drawed == 0ULL );
 		auto procedural_time = bigous::benchmark::measure_in_seconds( procedural );
-		std::cout << "Procedural total time: " << procedural_time << " seconds for "
-							<< bigous::polymorfism::procedural::drawed << " iterations.\n"
+		std::cout << name << " total time: " << procedural_time << " seconds for " << drawed << " iterations.\n"
 							<< std::endl;
-		assert( bigous::polymorfism::procedural::drawed == container_size );
+		assert( drawed == container_size );
 	}
 
 	// Object Oriented
 	{
-		assert( bigous::polymorfism::object_oriented::drawed == 0ULL );
+		using namespace bigous::polymorfism::object_oriented;
+		assert( drawed == 0ULL );
 		auto oo_time = bigous::benchmark::measure_in_seconds( object_oriented );
-		std::cout << "Object-Oriented total time: " << oo_time << " seconds for "
-							<< bigous::polymorfism::object_oriented::drawed << " iterations.\n"
-							<< std::endl;
-		assert( bigous::polymorfism::object_oriented::drawed == container_size );
+		std::cout << name << " total time: " << oo_time << " seconds for " << drawed << " iterations.\n" << std::endl;
+		assert( drawed == container_size );
 	}
 
 	// Visitor
 	{
-		assert( bigous::polymorfism::visitor::drawed == 0ULL );
+		using namespace bigous::polymorfism::visitor;
+		assert( drawed == 0ULL );
 		auto visitor_time = bigous::benchmark::measure_in_seconds( visitor );
-		std::cout << "Visitor total time: " << visitor_time << " seconds for " << bigous::polymorfism::visitor::drawed
-							<< " iterations.\n"
-							<< std::endl;
-		assert( bigous::polymorfism::visitor::drawed == container_size );
+		std::cout << name << " total time: " << visitor_time << " seconds for " << drawed << " iterations.\n" << std::endl;
+		assert( drawed == container_size );
 	}
 
 	// Variant Visitor
 	{
-		assert( bigous::polymorfism::variant_visitor::drawed == 0ULL );
+		using namespace bigous::polymorfism::variant_visitor;
+		assert( drawed == 0ULL );
 		auto variant_visitor_time = bigous::benchmark::measure_in_seconds( variant_visitor );
-		std::cout << "Variant Visitor total time: " << variant_visitor_time << " seconds for "
-							<< bigous::polymorfism::variant_visitor::drawed << " iterations.\n"
+		std::cout << name << " total time: " << variant_visitor_time << " seconds for " << drawed << " iterations.\n"
 							<< std::endl;
-		assert( bigous::polymorfism::variant_visitor::drawed == container_size );
+		assert( drawed == container_size );
 	}
 
 	// Strategy
 	{
-		assert( bigous::polymorfism::strategy::drawed == 0ULL );
+		using namespace bigous::polymorfism::strategy;
+		assert( drawed == 0ULL );
 		auto strategy_time = bigous::benchmark::measure_in_seconds( strategy );
-		std::cout << "Strategy total time: " << strategy_time << " seconds for "
-							<< bigous::polymorfism::strategy::drawed << " iterations.\n"
-							<< std::endl;
-		assert( bigous::polymorfism::strategy::drawed == container_size );
+		std::cout << name << " total time: " << strategy_time << " seconds for " << drawed << " iterations.\n" << std::endl;
+		assert( drawed == container_size );
 	}
 
 	// Function
 	{
 		assert( bigous::polymorfism::function::drawed == 0ULL );
 		auto function_time = bigous::benchmark::measure_in_seconds( function );
-		std::cout << "Function total time: " << function_time << " seconds for "
-							<< bigous::polymorfism::function::drawed << " iterations.\n"
+		std::cout << "Function total time: " << function_time << " seconds for " << bigous::polymorfism::function::drawed
+							<< " iterations.\n"
 							<< std::endl;
 		assert( bigous::polymorfism::function::drawed == container_size );
 	}

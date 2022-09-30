@@ -1,6 +1,7 @@
 module;
 
 #include <memory>
+#include <string_view>
 #include <vector>
 
 export module Bigous.Polymorfism.Visitor;
@@ -13,7 +14,8 @@ export
 		{
 			namespace visitor
 			{
-				auto drawed = 0ULL;
+				auto             drawed = 0ULL;
+				std::string_view name{ "Variant" };
 
 				class Circle;
 				class Square;

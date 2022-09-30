@@ -1,6 +1,7 @@
 module;
 
 #include <memory>
+#include <string_view>
 #include <vector>
 
 export module Bigous.Polymorfism.ObjectOriented;
@@ -13,7 +14,9 @@ export
 		{
 			namespace object_oriented
 			{
-				auto drawed = 0ULL;
+				auto             drawed = 0ULL;
+				std::string_view name{ "Object Oriented" };
+
 				class Shape
 				{
 				public:
@@ -22,7 +25,7 @@ export
 					virtual void draw() const = 0;
 				};
 
-        using Shapes = std::vector< std::unique_ptr< Shape > >;
+				using Shapes = std::vector< std::unique_ptr< Shape > >;
 
 				class Circle : public Shape
 				{

@@ -1,6 +1,7 @@
 module;
 
 #include <memory>
+#include <string_view>
 #include <vector>
 
 export module Bigous.Polymorfism.Procedural;
@@ -13,6 +14,9 @@ export
 		{
 			namespace procedural
 			{
+				auto             drawed = 0ULL;
+				std::string_view name{ "Procedural" };
+
 				enum ShapeType { circle, square };
 
 				class Shape
@@ -46,8 +50,6 @@ export
 					virtual ~Square() = default;
 					double getSide() const noexcept { return side; }
 				};
-
-				auto drawed = 0ULL;
 
 				void draw( Circle const & ) { ++drawed; }
 				void draw( Square const & ) { ++drawed; }
