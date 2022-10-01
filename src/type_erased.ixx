@@ -15,9 +15,6 @@ export
 		{
 			namespace type_erased
 			{
-				auto             drawed = 0ULL;
-				std::string_view name{ "Type Erased" };
-
 				class Circle
 				{
 					double radius;
@@ -65,27 +62,33 @@ export
 					}
 				};
 
-				using Shapes = std::vector< Shape >;
+				struct Helper {
 
-				void draw( Circle const & ) { ++drawed; }
-				void draw( Square const & ) { ++drawed; }
+					using Shapes = std::vector< Shape >;
 
-				void draw( Shapes const &shapes )
-				{
-					for( auto const &s: shapes ) {
-						draw( s );
+					unsigned long long drawed = 0ULL;
+					std::string_view   name{ "Type Erased" };
+
+					void draw_all( Shapes const &shapes )
+					{
+						for( auto const &s: shapes ) {
+							draw( s );
+						}
 					}
-				}
 
-				auto create_shapes( int size )
-				{
-					Shapes shapes;
-					for( int i = 0; i < size / 2; ++i ) {
-						shapes.push_back( Circle{ 2.0 + i } );
-						shapes.push_back( Square{ 1.5 + i } );
+					auto create_shapes( int size )
+					{
+						Shapes shapes;
+						for( int i = 0; i < size / 2; ++i ) {
+							shapes.push_back( Circle{ 2.0 + i } );
+							shapes.push_back( Square{ 1.5 + i } );
+						}
+						return shapes;
 					}
-					return shapes;
-				}
+				} helper;
+
+				void draw( Circle const & ) { ++helper.drawed; }
+				void draw( Square const & ) { ++helper.drawed; }
 			} // namespace type_erased
 		}   // namespace polymorfism
 	}     // namespace bigous

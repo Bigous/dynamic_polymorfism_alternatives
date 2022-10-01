@@ -15,9 +15,6 @@ export
 		{
 			namespace variant_visitor
 			{
-				auto             drawed = 0ULL;
-				std::string_view name{ "Variant Vector" };
-
 				class Circle
 				{
 					double radius;
@@ -36,34 +33,39 @@ export
 					double getSide() const noexcept { return side; }
 				};
 
-				class Draw
-				{
-				public:
-					void operator()( Circle const &c ) const { ++drawed; }
-					void operator()( Square const &c ) const { ++drawed; }
-				};
-
 				using Shape = std::variant< Circle, Square >;
 
-				using Shapes = std::vector< Shape >;
+				struct Helper {
+					unsigned long long drawed = 0ULL;
+					std::string_view   name{ "Variant Visitor" };
 
-				void draw( Shapes const &shapes )
-				{
-					Draw d;
-					for( auto const &s: shapes ) {
-						std::visit( d, s );
-					}
-				}
+					using Shapes = std::vector< Shape >;
 
-				auto create_shapes( int size )
-				{
-					Shapes shapes;
-					for( int i = 0; i < size / 2; ++i ) {
-						shapes.push_back( Circle{ 2.0 + i } );
-						shapes.push_back( Square{ 1.5 + i } );
+					class Draw
+					{
+					public:
+						void operator()( Circle const &c ) const { ++helper.drawed; }
+						void operator()( Square const &c ) const { ++helper.drawed; }
+					};
+
+					void draw_all( Shapes const &shapes )
+					{
+						Draw d;
+						for( auto const &s: shapes ) {
+							std::visit( d, s );
+						}
 					}
-					return shapes;
-				}
+
+					auto create_shapes( int size )
+					{
+						Shapes shapes;
+						for( int i = 0; i < size / 2; ++i ) {
+							shapes.push_back( Circle{ 2.0 + i } );
+							shapes.push_back( Square{ 1.5 + i } );
+						}
+						return shapes;
+					}
+				} helper;
 			} // namespace variant_visitor
 		}   // namespace polymorfism
 	}     // namespace bigous

@@ -14,9 +14,6 @@ export
 		{
 			namespace visitor
 			{
-				auto             drawed = 0ULL;
-				std::string_view name{ "Variant" };
-
 				class Circle;
 				class Square;
 
@@ -35,8 +32,6 @@ export
 					virtual ~Shape()                       = default;
 					virtual void accept( Visitor const & ) = 0;
 				};
-
-				using Shapes = std::vector< std::unique_ptr< Shape > >;
 
 				class Circle : public Shape
 				{
@@ -60,30 +55,38 @@ export
 					void   accept( Visitor const &v ) override { v.visit( *this ); }
 				};
 
-				class Draw : public Visitor
-				{
-				public:
-					void visit( Circle const &c ) const override { ++drawed; }
-					void visit( Square const &c ) const override { ++drawed; }
-				};
+				struct Helper {
+					unsigned long long drawed = 0ULL;
+					std::string_view   name{ "Visitor" };
 
-				void draw( Shapes const &shapes )
-				{
-					Draw d;
-					for( auto const &s: shapes ) {
-						s->accept( d );
-					}
-				}
+					class Draw : public Visitor
+					{
+					public:
+						void visit( Circle const &c ) const override { ++helper.drawed; }
+						void visit( Square const &c ) const override { ++helper.drawed; }
+					};
 
-				auto create_shapes( int size )
-				{
-					Shapes shapes;
-					for( int i = 0; i < size / 2; ++i ) {
-						shapes.push_back( std::make_unique< Circle >( 2.0 + i ) );
-						shapes.push_back( std::make_unique< Square >( 1.5 + i ) );
+          using Shapes = std::vector< std::unique_ptr< Shape > >;
+
+					void draw_all( Shapes const &shapes )
+					{
+						Draw d;
+						for( auto const &s: shapes ) {
+							s->accept( d );
+						}
 					}
-					return shapes;
-				}
+
+					auto create_shapes( int size )
+					{
+						Shapes shapes;
+						for( int i = 0; i < size / 2; ++i ) {
+							shapes.push_back( std::make_unique< Circle >( 2.0 + i ) );
+							shapes.push_back( std::make_unique< Square >( 1.5 + i ) );
+						}
+						return shapes;
+					}
+				} helper;
+
 			} // namespace visitor
 		}   // namespace polymorfism
 	}     // namespace bigous

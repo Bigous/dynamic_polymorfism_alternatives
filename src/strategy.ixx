@@ -14,9 +14,6 @@ export
 		{
 			namespace strategy
 			{
-				auto             drawed = 0ULL;
-				std::string_view name{ "Strategy" };
-
 				class Circle;
 				class Square;
 
@@ -41,8 +38,6 @@ export
 					virtual ~Shape()          = default;
 					virtual void draw() const = 0;
 				};
-
-				using Shapes = std::vector< std::unique_ptr< Shape > >;
 
 				class Circle : public Shape
 				{
@@ -73,38 +68,45 @@ export
 					void   draw() const override { drawing->draw( *this ); }
 				};
 
-				void draw( Shapes const &shapes )
-				{
-					for( auto const &s: shapes ) {
-						s->draw();
+				struct Helper {
+					unsigned long long drawed = 0ULL;
+					std::string_view   name{ "Strategy" };
+
+          using Shapes = std::vector< std::unique_ptr< Shape > >;
+
+					class OpenGLCircleStrategy : public DrawCircleStrategy
+					{
+					public:
+						virtual ~OpenGLCircleStrategy() {}
+
+						void draw( Circle const & ) const override { ++helper.drawed; }
+					};
+
+					class OpenGLSquareStrategy : public DrawSquareStrategy
+					{
+					public:
+						virtual ~OpenGLSquareStrategy() {}
+
+						void draw( Square const & ) const override { ++helper.drawed; }
+					};
+
+					void draw_all( Shapes const &shapes )
+					{
+						for( auto const &s: shapes ) {
+							s->draw();
+						}
 					}
-				}
 
-				class OpenGLCircleStrategy : public DrawCircleStrategy
-				{
-				public:
-					virtual ~OpenGLCircleStrategy() {}
-
-					void draw( Circle const & ) const override { ++drawed; }
-				};
-
-				class OpenGLSquareStrategy : public DrawSquareStrategy
-				{
-				public:
-					virtual ~OpenGLSquareStrategy() {}
-
-					void draw( Square const & ) const override { ++drawed; }
-				};
-
-				auto create_shapes( int size )
-				{
-					Shapes shapes;
-					for( int i = 0; i < size / 2; ++i ) {
-						shapes.push_back( std::make_unique< Circle >( 2.0 + i, std::make_unique< OpenGLCircleStrategy >() ) );
-						shapes.push_back( std::make_unique< Square >( 1.5 + i, std::make_unique< OpenGLSquareStrategy >() ) );
+					auto create_shapes( int size )
+					{
+						Shapes shapes;
+						for( int i = 0; i < size / 2; ++i ) {
+							shapes.push_back( std::make_unique< Circle >( 2.0 + i, std::make_unique< OpenGLCircleStrategy >() ) );
+							shapes.push_back( std::make_unique< Square >( 1.5 + i, std::make_unique< OpenGLSquareStrategy >() ) );
+						}
+						return shapes;
 					}
-					return shapes;
-				}
+				} helper;
 			} // namespace strategy
 		}   // namespace polymorfism
 	}     // namespace bigous

@@ -15,9 +15,6 @@ export
 		{
 			namespace function
 			{
-				auto             drawed = 0ULL;
-				std::string_view name{ "Function" };
-
 				class Circle;
 				class Square;
 
@@ -35,8 +32,6 @@ export
 					virtual ~Shape()          = default;
 					virtual void draw() const = 0;
 				};
-
-				using Shapes = std::vector< std::unique_ptr< Shape > >;
 
 				class Circle : public Shape
 				{
@@ -62,25 +57,30 @@ export
 					void   draw() const override { drawing( *this ); }
 				};
 
-				void draw( Shapes const &shapes )
-				{
-					for( auto const &s: shapes ) {
-						s->draw();
+				struct Helper {
+					unsigned long long drawed = 0ULL;
+					std::string_view   name{ "Function" };
+					using Shapes = std::vector< std::unique_ptr< Shape > >;
+					void draw_all( Shapes const &shapes )
+					{
+						for( auto const &s: shapes ) {
+							s->draw();
+						}
 					}
-				}
 
-				void draw( Circle const & ) { ++drawed; }
-				void draw( Square const & ) { ++drawed; }
-
-				auto create_shapes( int size )
-				{
-					Shapes shapes;
-					for( int i = 0; i < size / 2; ++i ) {
-						shapes.push_back( std::make_unique< Circle >( 2.0 + i ) );
-						shapes.push_back( std::make_unique< Square >( 1.5 + i ) );
+					auto create_shapes( int size )
+					{
+						Shapes shapes;
+						for( int i = 0; i < size / 2; ++i ) {
+							shapes.push_back( std::make_unique< Circle >( 2.0 + i ) );
+							shapes.push_back( std::make_unique< Square >( 1.5 + i ) );
+						}
+						return shapes;
 					}
-					return shapes;
-				}
+				} helper;
+
+				void draw( Circle const & ) { ++helper.drawed; }
+				void draw( Square const & ) { ++helper.drawed; }
 			} // namespace function
 		}   // namespace polymorfism
 	}     // namespace bigous

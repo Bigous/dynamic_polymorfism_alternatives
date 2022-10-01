@@ -14,9 +14,6 @@ export
 		{
 			namespace object_oriented
 			{
-				auto             drawed = 0ULL;
-				std::string_view name{ "Object Oriented" };
-
 				class Shape
 				{
 				public:
@@ -25,7 +22,7 @@ export
 					virtual void draw() const = 0;
 				};
 
-				using Shapes = std::vector< std::unique_ptr< Shape > >;
+				void inc_draw();
 
 				class Circle : public Shape
 				{
@@ -35,7 +32,7 @@ export
 					explicit Circle( double rad ) : radius( rad ) {}
 					virtual ~Circle() = default;
 					double getRadius() const noexcept { return radius; }
-					void   draw() const override { ++drawed; }
+					void   draw() const override { inc_draw(); }
 				};
 
 				class Square : public Shape
@@ -46,25 +43,35 @@ export
 					explicit Square( double s ) : side( s ) {}
 					virtual ~Square() = default;
 					double getSide() const noexcept { return side; }
-					void   draw() const override { ++drawed; }
+					void   draw() const override { inc_draw(); }
 				};
 
-				void draw( Shapes const &shapes )
-				{
-					for( auto const &s: shapes ) {
-						s->draw();
-					}
-				}
+				struct Helper {
+					unsigned long long drawed = 0ULL;
+					std::string_view   name{ "Object Oriented" };
 
-				auto create_shapes( int size )
-				{
-					Shapes shapes;
-					for( int i = 0; i < size / 2; ++i ) {
-						shapes.push_back( std::make_unique< Circle >( 2.0 + i ) );
-						shapes.push_back( std::make_unique< Square >( 1.5 + i ) );
+					using Shapes = std::vector< std::unique_ptr< Shape > >;
+
+					void draw_all( Shapes const &shapes )
+					{
+						for( auto const &s: shapes ) {
+							s->draw();
+						}
 					}
-					return shapes;
-				}
+
+					auto create_shapes( int size )
+					{
+						Shapes shapes;
+						for( int i = 0; i < size / 2; ++i ) {
+							shapes.push_back( std::make_unique< Circle >( 2.0 + i ) );
+							shapes.push_back( std::make_unique< Square >( 1.5 + i ) );
+						}
+						return shapes;
+					}
+				} helper;
+
+				void inc_draw() { ++helper.drawed; }
+
 			} // namespace object_oriented
 		}   // namespace polymorfism
 	}     // namespace bigous

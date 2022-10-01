@@ -14,9 +14,6 @@ export
 		{
 			namespace procedural
 			{
-				auto             drawed = 0ULL;
-				std::string_view name{ "Procedural" };
-
 				enum ShapeType { circle, square };
 
 				class Shape
@@ -28,8 +25,6 @@ export
 					virtual ~Shape() = default;
 					ShapeType getType() const noexcept { return type; }
 				};
-
-				using Shapes = std::vector< std::unique_ptr< Shape > >;
 
 				class Circle : public Shape
 				{
@@ -51,32 +46,43 @@ export
 					double getSide() const noexcept { return side; }
 				};
 
-				void draw( Circle const & ) { ++drawed; }
-				void draw( Square const & ) { ++drawed; }
+				void draw( Circle const & );
+				void draw( Square const & );
 
-				void draw( Shapes const &shapes )
-				{
-					for( auto const &s: shapes ) {
-						switch( s->getType() ) {
-							case circle:
-								draw( *static_cast< Circle const * >( s.get() ) );
-								break;
-							case square:
-								draw( *static_cast< Square const * >( s.get() ) );
-								break;
+				struct Helper {
+					unsigned long long drawed = 0ULL;
+					std::string_view   name{ "Procedural" };
+
+          using Shapes = std::vector< std::unique_ptr< Shape > >;
+
+					void draw_all( Shapes const &shapes )
+					{
+						for( auto const &s: shapes ) {
+							switch( s->getType() ) {
+								case circle:
+									draw( *static_cast< Circle const * >( s.get() ) );
+									break;
+								case square:
+									draw( *static_cast< Square const * >( s.get() ) );
+									break;
+							}
 						}
 					}
-				}
 
-				auto create_shapes( int size )
-				{
-					Shapes shapes;
-					for( int i = 0; i < size / 2; ++i ) {
-						shapes.push_back( std::make_unique< Circle >( 2.0 + i ) );
-						shapes.push_back( std::make_unique< Square >( 1.5 + i ) );
+					auto create_shapes( int size )
+					{
+						Shapes shapes;
+						for( int i = 0; i < size / 2; ++i ) {
+							shapes.push_back( std::make_unique< Circle >( 2.0 + i ) );
+							shapes.push_back( std::make_unique< Square >( 1.5 + i ) );
+						}
+						return shapes;
 					}
-					return shapes;
-				}
+				} helper;
+
+				void draw( Circle const & ) { ++helper.drawed; }
+				void draw( Square const & ) { ++helper.drawed; }
+
 			} // namespace procedural
 		}   // namespace polymorfism
 	}     // namespace bigous
